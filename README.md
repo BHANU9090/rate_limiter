@@ -86,9 +86,7 @@ This ensures the rate limit is checked for the **last 60 seconds**, not fixed ti
 * The application uses a **Python dictionary with deques** (queues) to store timestamps of requests per IP address.
 * This data is stored in **local memory**, so it resets when the server restarts.
 
-```
 
----
 
 
 
