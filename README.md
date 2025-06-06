@@ -90,6 +90,5 @@ This ensures the rate limit is checked for the **last 60 seconds**, not fixed ti
 
 ---
 
-Let me know if you'd like to add sections like project structure, production suggestions, or convert it later for Redis-based usage.
-```
+
 
