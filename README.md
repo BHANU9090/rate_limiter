@@ -1,67 +1,95 @@
- How to Run Rate Limiter
- 1. Install Dependencies
+# Rate Limiter using Sliding Window Algorithm
+
+## How to Run Rate Limiter
+
+###1. Install Dependencies
 Make sure you're in your virtual environment (if using one), then run:
+
+```
 pip install fastapi uvicorn
+````
 
- 2. Start the Server
+### 2. Start the Server
+
 Run the following command from the project root:
+
+```
 uvicorn app.main:app --reload --port 8001
+```
 
- How to Test the Rate Limiter
+---
 
-Endpoint:
-http://localhost:8001/api/data
+## How to Test the Rate Limiter
 
-Steps to Test:
-Open your browser or use a tool like Postman.
+**Endpoint:**
+[http://localhost:8001/api/data](http://localhost:8001/api/data)
 
-Visit the endpoint above.
+### Steps to Test:
 
-First 10 Requests:
-On the first access to the browser, 1 request is counted.
+1. **Open your browser or use a tool like Postman.**
+2. **Visit the endpoint above.**
 
-Refresh 9 more times quickly (total 10 requests).
+**First 10 Requests:**
 
-All requests should succeed (200 OK).
+* On the first access to the browser, 1 request is counted.
+* Refresh 9 more times quickly (total 10 requests).
+* All requests should succeed with `200 OK`.
 
-⏳ Wait 30 Seconds:
-You're still within the 60-second sliding window.
+**Wait 30 Seconds:**
 
-Try again — the 11th request should fail with 429 Too Many Requests.
+* You are still within the 60-second sliding window.
+* Try again — the 11th request should fail with `429 Too Many Requests`.
 
-🕐 Wait a Full 60 Seconds:
-After 60 seconds from the first request, try again.
+**Wait a Full 60 Seconds:**
 
+* After 60 seconds from the first request, try again.
+* The request should now succeed, as the old requests have expired.
 
+---
 
-APPROACH: 
- **How Sliding Window Rate Limiting Works**
- This project restricts the number of times a user (depending on their IP address) can use the API in a given period of time.
+## Approach
 
- Objective: Permit ten requests per user in a 60-second period.
+### **How Sliding Window Rate Limiting Works**
 
- Additional requests are banned if the user submits more than ten requests within that period (429 Too Many Requests).
+This project restricts the number of times a user (based on their IP address) can access the API in a given time frame.
 
-**Sliding Window Logic: We monitor API usage using a sliding time frame.**
+**Objective:**
+Permit **10 requests per user within a 60-second period**.
 
- 1.Whenever a user submits a request, we:
+**Behavior:**
+Additional requests are blocked if the user exceeds 10 within that time window.
+A `429 Too Many Requests` error is returned.
 
-  Find out the time now.
+---
 
-   Delete requests that are older than sixty seconds from their history.
+### **Sliding Window Logic**
 
- 2.Next, we
+We monitor API usage using a sliding time frame.
 
-   Determine the number of requests they have made in the previous sixty seconds.
+1. **When a user makes a request:**
 
-   If it is ten or more, the request is denied.
+   * The current time is recorded.
+   * All requests older than 60 seconds are removed from the user's history.
 
-   We permit it and save the current time if it is less than ten.
+2. **Then we:**
 
-   This guarantees that the limit is never checked for set time blocks, but rather for the last 60 seconds.
+   * Count how many requests the user made in the **last 60 seconds**.
+   * If it's **10 or more**, the request is **denied**.
+   * If it's **less than 10**, the request is **allowed** and the current time is added to their history.
 
- **Where is the data related to the request stored?**
- 
- The application stores timestamps for every IP address using a Python dictionary with deques (queues).
+This ensures the rate limit is checked for the **last 60 seconds**, not fixed time blocks.
 
- When the server restarts, this is reset because it is saved in local memory.
+---
+
+### **Where is the data stored?**
+
+* The application uses a **Python dictionary with deques** (queues) to store timestamps of requests per IP address.
+* This data is stored in **local memory**, so it resets when the server restarts.
+
+```
+
+---
+
+Let me know if you'd like to add sections like project structure, production suggestions, or convert it later for Redis-based usage.
+```
+
