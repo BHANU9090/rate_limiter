@@ -22,7 +22,7 @@ def check_rate_limit(request: Request):
 
 @app.get("/")
 def root():
-    return {"message": "Rate limiter is working modularly!"}
+    return {"message": "Rate limiter is working!"}
 
 @app.get("/api/data")
 def get_data(rate_info=Depends(check_rate_limit)):
