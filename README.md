@@ -8,14 +8,16 @@ Run the following command from the project root:
 uvicorn app.main:app --reload --port 8001
 
  How to Test the Rate Limiter
+
 Endpoint:
 http://localhost:8001/api/data
-🧾 Steps to Test:
+
+Steps to Test:
 Open your browser or use a tool like Postman.
 
 Visit the endpoint above.
 
-✅ First 10 Requests:
+First 10 Requests:
 On the first access to the browser, 1 request is counted.
 
 Refresh 9 more times quickly (total 10 requests).
